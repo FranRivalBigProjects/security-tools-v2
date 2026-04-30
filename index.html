@@ -1,160 +1,1082 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Security Tools v2 – CORS, CSRF, DDoS Protection & TLS Analysis</title>
-
-<meta name="description" content="Advanced security tools to analyze CORS policies, CSRF protection, DDoS mitigation, HTTP headers, rate limiting, and SSL/TLS configurations.">
-
-<meta name="keywords" content="cors analyzer tool, csrf protection checker, ddos mitigation analyzer, http security headers checker, rate limiting tester, ssl tls configuration analyzer">
-
 <meta name="google-site-verification" content="PkLa_ViOo6FAHpvh8SacceMb95o9tePRdrqLNBz9X1M" />
+<meta name="robots" content="index, follow">
+
+<title>CSRF Tools for DevOps Teams – CSRF Checker, Protection Guide &amp; CI/CD Integration</title>
+
+<meta name="description" content="CSRF tools for DevOps teams. Paste HTML or headers to check for CSRF vulnerabilities, missing tokens, SameSite cookies, and security headers. Includes CSRF protection guide for Express, Django, Laravel, Spring, and CI/CD pipeline integration.">
+
+<meta name="keywords" content="csrf tools for devops teams, csrf protection checker, csrf tool, csrf security tool, csrf token validator, csrf devops, csrf ci cd, csrf protection express django laravel, csrf testing tool, csrf header checker">
+
+<link rel="canonical" href="https://franrivalbigprojects.github.io/security-tools-v2/">
+
+<meta property="og:title" content="CSRF Tools for DevOps Teams – Checker, Guide and CI/CD Integration">
+<meta property="og:description" content="Check HTML and headers for CSRF vulnerabilities. CSRF protection guide for DevOps teams covering Express, Django, Laravel, Spring, and CI/CD pipelines.">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+:root {
+  --bg: #040910;
+  --surface: #07101a;
+  --surface2: #0c1828;
+  --border: #101e2e;
+  --border2: #162840;
+  --csrf: #06b6d4;
+  --csrf-dim: rgba(6,182,212,0.12);
+  --csrf-dim2: rgba(6,182,212,0.05);
+  --csrf-glow: rgba(6,182,212,0.18);
+  --red: #f87171;
+  --red-dim: rgba(248,113,113,0.1);
+  --orange: #fb923c;
+  --orange-dim: rgba(251,146,60,0.08);
+  --yellow: #fbbf24;
+  --yellow-dim: rgba(251,191,36,0.08);
+  --green: #22c55e;
+  --green-dim: rgba(34,197,94,0.1);
+  --green-dim2: rgba(34,197,94,0.05);
+  --text: #b8cce0;
+  --text-muted: #3a5570;
+  --text-dim: #0f1e30;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', sans-serif;
+  --r: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-    font-family: Arial, sans-serif;
-    background: #020617;
-    color: #e5e7eb;
-    margin: 0;
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 44px 44px;
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
 }
 
 header {
-    background: linear-gradient(90deg, #06b6d4, #ef4444);
-    padding: 30px;
-    text-align: center;
+  border-bottom: 1px solid var(--border2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(4,9,16,0.97);
+  backdrop-filter: blur(12px);
+}
+
+.header-inner {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-pill {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--csrf);
+  background: var(--csrf-dim2);
+  border: 1px solid rgba(6,182,212,0.3);
+  border-radius: 3px;
+  padding: 3px 9px;
+}
+
+.logo-text {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.logo-text strong { color: var(--csrf); font-weight: 500; }
+
+.wrapper {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  padding: 48px 0 30px;
+  border-bottom: 1px solid var(--border2);
+  margin-bottom: 24px;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--csrf);
+  margin-bottom: 12px;
+  opacity: 0.8;
 }
 
 h1 {
-    margin: 0;
-    font-size: 2.5rem;
+  font-size: clamp(22px, 3.2vw, 30px);
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
-.container {
-    max-width: 1100px;
-    margin: auto;
-    padding: 20px;
+h1 em { font-style: normal; color: var(--csrf); }
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--text-muted);
+  max-width: 640px;
+  line-height: 1.75;
+  margin-bottom: 16px;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+.hero-sub strong { color: var(--text); }
+
+.pill-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.pill {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 3px;
+  border: 1px solid;
+}
+.pill-c  { color: var(--csrf); background: var(--csrf-dim2); border-color: rgba(6,182,212,0.3); }
+.pill-dim { color: var(--text-muted); border-color: var(--border2); }
+
+/* TOOL */
+.tool-shell {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 18px;
 }
 
-.card {
-    background: #0f172a;
-    padding: 20px;
-    border-radius: 14px;
-    border: 1px solid #1e293b;
-    transition: 0.3s;
+.tool-topbar {
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border2);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.card:hover {
-    transform: translateY(-6px);
-    border-color: #06b6d4;
+.topbar-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-a {
-    text-decoration: none;
-    color: #22c55e;
-    font-weight: bold;
-    display: inline-block;
-    margin-top: 10px;
+.btn-sm {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid;
+  background: transparent;
+  transition: opacity 0.15s;
 }
 
-a:hover {
-    color: #4ade80;
+.btn-sm:hover { opacity: 0.75; }
+.btn-csrf  { color: var(--csrf); border-color: rgba(6,182,212,0.3); background: var(--csrf-dim2); }
+.btn-ghost { color: var(--text-muted); border-color: var(--border2); }
+
+/* MODE TABS */
+.mode-row {
+  display: flex;
+  gap: 6px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border2);
+  background: var(--bg);
 }
 
-footer {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid #1e293b;
-    margin-top: 40px;
-    font-size: 0.9rem;
+.mode-btn {
+  padding: 6px 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  border-radius: 4px;
+  border: 1px solid var(--border2);
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+
+.mode-btn:hover { border-color: var(--csrf); color: var(--text); }
+.mode-btn.active { border-color: var(--csrf); background: var(--csrf-dim2); color: var(--csrf); }
+
+/* SPLIT */
+.editor-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 320px;
+}
+
+.pane-left {
+  border-right: 1px solid var(--border2);
+  display: flex;
+  flex-direction: column;
+}
+
+.pane-head {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-dim);
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--border2);
+  background: var(--surface2);
+}
+
+.csrf-textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 270px;
+  padding: 14px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.65;
+  background: var(--bg);
+  border: none;
+  color: var(--text);
+  resize: none;
+}
+
+.csrf-textarea:focus { outline: none; }
+
+.pane-right { display: flex; flex-direction: column; overflow: hidden; }
+#resultsPane { flex: 1; padding: 12px; overflow-y: auto; min-height: 270px; }
+
+.idle-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 250px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  gap: 8px;
+}
+
+.action-bar {
+  padding: 12px 18px;
+  border-top: 1px solid var(--border2);
+  background: var(--surface2);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-check {
+  padding: 10px 26px;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--csrf);
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 0 16px var(--csrf-glow);
+  transition: opacity 0.15s;
+}
+
+.btn-check:hover { opacity: 0.87; }
+
+/* RESULTS */
+.score-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+
+.score-grade { font-family: var(--mono); font-size: 26px; font-weight: 600; width: 36px; text-align: center; flex-shrink: 0; }
+.score-meta strong { display: block; font-size: 13px; color: #fff; margin-bottom: 2px; }
+.score-meta span   { font-family: var(--mono); font-size: 11px; color: var(--text-muted); }
+
+.stat-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.sch { background: var(--bg); border: 1px solid var(--border2); border-radius: 4px; padding: 6px 10px; text-align: center; min-width: 54px; }
+.sch-num { font-family: var(--mono); font-size: 15px; font-weight: 600; line-height: 1; display: block; margin-bottom: 2px; }
+.sch-lbl { font-family: var(--mono); font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.07em; }
+
+.finding {
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-left: 3px solid;
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.f-critical { border-left-color: var(--red); }
+.f-warning  { border-left-color: var(--yellow); }
+.f-info     { border-left-color: var(--csrf); }
+.f-pass     { border-left-color: var(--green); }
+
+.f-head { display: flex; align-items: center; gap: 7px; margin-bottom: 2px; }
+.f-badge {
+  font-size: 9px; padding: 1px 6px; border-radius: 2px; border: 1px solid;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.fb-critical { color: var(--red);  background: var(--red-dim);   border-color: rgba(248,113,113,0.2); }
+.fb-warning  { color: var(--yellow);background: var(--yellow-dim);border-color: rgba(251,191,36,0.2); }
+.fb-info     { color: var(--csrf); background: var(--csrf-dim2); border-color: rgba(6,182,212,0.2); }
+.fb-pass     { color: var(--green);background: var(--green-dim2); border-color: rgba(34,197,94,0.2); }
+
+.f-title { font-weight: 600; color: var(--text); font-size: 11px; }
+.f-body  { color: var(--text-muted); font-size: 11px; line-height: 1.5; }
+
+/* FRAMEWORK TABLE */
+.fw-table {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+.fw-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 1fr;
+  border-bottom: 1px solid var(--border2);
+}
+
+.fw-row:last-child { border-bottom: none; }
+.fw-row.fw-head { background: var(--surface2); }
+.fw-row:hover:not(.fw-head) { background: rgba(6,182,212,0.02); }
+
+.fw-cell {
+  padding: 9px 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  border-right: 1px solid var(--border2);
+}
+
+.fw-cell:last-child { border-right: none; }
+.fw-head .fw-cell { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+.fw-name { color: var(--csrf); font-weight: 600; }
+
+/* SECTION */
+hr.divider { border: none; border-top: 1px solid var(--border2); margin: 50px 0; }
+.content-section { margin-bottom: 50px; }
+
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.sec-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--csrf);
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+.sec-rule { flex: 1; height: 1px; background: var(--border2); }
+
+p { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 10px; max-width: 820px; }
+p strong { color: var(--text); }
+
+code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--surface2);
+  color: var(--csrf);
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid var(--border2);
+}
+
+.code-block {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--csrf);
+  border-radius: 5px;
+  padding: 14px 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.8;
+  overflow-x: auto;
+  white-space: pre;
+  margin: 12px 0;
+  color: var(--text-muted);
+}
+
+.ck { color: var(--csrf); }
+.cg { color: var(--green); }
+.cm { color: var(--text-dim); }
+.cs { color: var(--yellow); }
+
+.dense-block {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 22px;
+  margin-top: 14px;
+}
+
+.dense-block p { margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border2); max-width: none; }
+.dense-block p:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+
+.faq-list {
+  margin-top: 14px;
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.faq-item { border-bottom: 1px solid var(--border2); }
+.faq-item:last-child { border-bottom: none; }
+
+.faq-q {
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: none;
+  padding: 13px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  font-family: var(--sans);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  transition: background 0.15s;
+}
+
+.faq-q:hover { background: var(--csrf-dim2); }
+.faq-arrow { font-family: var(--mono); font-size: 11px; color: var(--text-dim); transition: transform 0.2s; flex-shrink: 0; }
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+
+.faq-a {
+  display: none;
+  padding: 0 18px 13px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.75;
+  border-top: 1px solid var(--border2);
+  background: var(--bg);
+}
+
+.faq-item.open .faq-a { display: block; }
+.faq-a code { color: var(--csrf); background: var(--csrf-dim2); }
+
+.subtools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.stl {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  text-decoration: none;
+  display: block;
+  transition: border-color 0.15s;
+}
+
+.stl:hover { border-color: rgba(6,182,212,0.3); }
+.stl-eye  { font-family: var(--mono); font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+.stl-name { font-family: var(--mono); font-size: 12px; color: var(--csrf); font-weight: 500; }
+
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 50px; }
+.tag {
+  font-family: var(--mono); font-size: 10px; color: var(--text-muted);
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 100px; padding: 4px 12px; cursor: default;
+}
+.tag:hover { color: var(--csrf); border-color: rgba(6,182,212,0.3); }
+
+footer { border-top: 1px solid var(--border2); padding: 20px 0; position: relative; z-index: 1; }
+.footer-inner {
+  max-width: 1060px; margin: 0 auto; padding: 0 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 8px;
+}
+footer p { font-family: var(--mono); font-size: 11px; color: var(--text-dim); margin: 0; }
+
+@media (max-width: 640px) {
+  .editor-split { grid-template-columns: 1fr; }
+  .pane-left    { border-right: none; border-bottom: 1px solid var(--border2); }
+  .fw-row       { grid-template-columns: 90px 1fr; font-size: 10px; }
+  .fw-row .fw-cell:last-child { display: none; }
 }
 </style>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"CSRF Tools for DevOps Teams","applicationCategory":"SecurityApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free CSRF security tools for DevOps teams. Paste HTML or HTTP headers to check for CSRF vulnerabilities, missing tokens, missing SameSite cookie attributes, and security headers. Includes CSRF protection guide for Express, Django, Laravel, Spring, and CI/CD integration."}
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are the best CSRF tools for DevOps teams?","acceptedAnswer":{"@type":"Answer","text":"For DevOps teams: (1) This online CSRF checker — paste HTML or headers to detect missing CSRF tokens and misconfigured cookies. (2) OWASP ZAP — includes CSRF scanner in active scan mode. (3) Burp Suite — CSRF PoC generator in Professional edition. (4) Framework middleware: csurf (Node.js/Express), Django's built-in CSRF middleware, Laravel's VerifyCsrfToken middleware, Spring Security's CsrfFilter. For CI/CD: integrate OWASP ZAP as a GitHub Actions step, or use Semgrep with CSRF rules to catch missing token validation in code review."}},{"@type":"Question","name":"How do I add CSRF protection to a CI/CD pipeline?","acceptedAnswer":{"@type":"Answer","text":"Add CSRF scanning to CI/CD: (1) OWASP ZAP API Scan as a GitHub Actions step — runs CSRF and injection checks on your deployed API. (2) Semgrep with security rules — catches missing CSRF middleware in Node.js, Python, PHP code at PR time. (3) Nuclei with CSRF templates — fast, lightweight scanner that can run on every deployment. (4) Check headers in integration tests: verify CSRF tokens are present in form responses and that Set-Cookie includes SameSite=Strict or SameSite=Lax."}}]}
+</script>
+
 </head>
 
 <body>
-
 <header>
-    <h1>Security Tools v2</h1>
-    <p>Analyze web security, protocols and attack mitigation</p>
+  <div class="header-inner">
+    <span class="logo-pill">&#9632; SEC</span>
+    <span class="logo-text"><strong>csrf</strong>-tools-devops</span>
+  </div>
 </header>
 
-<div class="container">
+<div class="wrapper">
 
-<section>
-<h2>Web Security & Protocol Analysis Toolkit</h2>
-<p>
-These security tools focus on modern web security challenges, including CORS policies, CSRF protection,
-DDoS mitigation, HTTP security headers, rate limiting, and SSL/TLS configurations.
-Perfect for developers, security engineers, and DevOps teams working on secure web applications.
-</p>
-</section>
+  <section class="hero">
+    <p class="hero-eyebrow">// DevSecOps Security Tools</p>
+    <h1><em>CSRF Tools</em> for DevOps Teams —<br>Checker, Protection Guide &amp; CI/CD Integration</h1>
+    <p class="hero-sub">
+      Paste HTML or HTTP headers to check for <strong>CSRF vulnerabilities, missing tokens, SameSite cookie issues</strong>. Includes framework implementation guide and CI/CD pipeline integration.
+    </p>
+    <div class="pill-row">
+      <span class="pill pill-c">CSRF Token Check</span>
+      <span class="pill pill-c">SameSite Cookies</span>
+      <span class="pill pill-dim">Security Headers</span>
+      <span class="pill pill-dim">CI/CD Guide</span>
+      <span class="pill pill-dim">Framework Middleware</span>
+    </div>
+  </section>
 
-<section class="grid">
+  <!-- CSRF CHECKER TOOL -->
 
-<div class="card">
-<h3>CORS Analyzer</h3>
-<p>Inspect and validate cross-origin resource sharing policies.</p>
-<a href="security-tools-v2/cors">security-tools-v2/cors</a>
+  <div class="tool-shell">
+    <div class="tool-topbar">
+      <span class="topbar-label">// CSRF Security Checker</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-sm btn-csrf" id="sampleBtn">Load Sample</button>
+        <button class="btn-sm btn-ghost" id="clearBtn">Clear</button>
+      </div>
+    </div>
+
+
+<div class="mode-row">
+  <button class="mode-btn active" id="modeHtml" onclick="setMode('html',this)">HTML Form Check</button>
+  <button class="mode-btn" id="modeHeaders" onclick="setMode('headers',this)">HTTP Headers Check</button>
 </div>
 
-<div class="card">
-<h3>CSRF Protection Checker</h3>
-<p>Analyze CSRF protections and vulnerabilities.</p>
-<a href="security-tools-v2/csrf">security-tools-v2/csrf</a>
+<div class="editor-split">
+  <div class="pane-left">
+    <div class="pane-head" id="paneHint">// Paste HTML page source or form code</div>
+    <textarea class="csrf-textarea" id="csrfInput" spellcheck="false"></textarea>
+  </div>
+  <div class="pane-right">
+    <div class="pane-head">// Security findings</div>
+    <div id="resultsPane">
+      <div class="idle-msg">
+        <span style="font-size:28px;opacity:0.1;">&#9632;</span>
+        <span>Paste HTML or headers and click<br>Check CSRF Security</span>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="card">
-<h3>DDoS Mitigation Tool</h3>
-<p>Simulate and evaluate DDoS protection strategies.</p>
-<a href="security-tools-v2/ddos">security-tools-v2/ddos</a>
+<div class="action-bar">
+  <button class="btn-check" id="checkBtn">Check CSRF Security</button>
+  <button class="btn-sm btn-ghost" id="clearBtn2">Reset</button>
+  <span id="statusMsg" style="font-family:var(--mono);font-size:11px;color:var(--text-dim);"></span>
 </div>
 
-<div class="card">
-<h3>Security Headers Analyzer</h3>
-<p>Check HTTP headers for security best practices.</p>
-<a href="security-tools-v2/headers">security-tools-v2/headers</a>
-</div>
 
-<div class="card">
-<h3>Rate Limiting Tester</h3>
-<p>Test API and server rate limiting configurations.</p>
-<a href="security-tools-v2/rate">security-tools-v2/rate</a>
-</div>
+  </div>
 
-<div class="card">
-<h3>SSL Configuration Analyzer</h3>
-<p>Validate SSL setup and certificate strength.</p>
-<a href="security-tools-v2/ssl">security-tools-v2/ssl</a>
-</div>
+  <hr class="divider">
 
-<div class="card">
-<h3>TLS Analyzer</h3>
-<p>Inspect TLS protocols and encryption settings.</p>
-<a href="security-tools-v2/tls">security-tools-v2/tls</a>
-</div>
+  <!-- FRAMEWORK TABLE -->
 
-</section>
+  <section class="content-section">
+    <div class="sec-head">
+      <span class="sec-label">CSRF protection by framework</span>
+      <span class="sec-rule"></span>
+    </div>
+    <div class="fw-table">
+      <div class="fw-row fw-head">
+        <div class="fw-cell">Framework</div>
+        <div class="fw-cell">Implementation</div>
+        <div class="fw-cell">Notes</div>
+      </div>
+      <div class="fw-row">
+        <div class="fw-cell fw-name">Express (Node)</div>
+        <div class="fw-cell">csrf npm package or csurf (deprecated) — use csrf-csrf for modern apps</div>
+        <div class="fw-cell">Generate token per session, validate on POST/PUT/DELETE</div>
+      </div>
+      <div class="fw-row">
+        <div class="fw-cell fw-name">Fastify</div>
+        <div class="fw-cell">@fastify/csrf-protection plugin — built-in, double-submit cookie pattern</div>
+        <div class="fw-cell">CNCF-supported, pairs with @fastify/cookie</div>
+      </div>
+      <div class="fw-row">
+        <div class="fw-cell fw-name">Django</div>
+        <div class="fw-cell">Built-in CsrfViewMiddleware — enabled by default in MIDDLEWARE</div>
+        <div class="fw-cell">Uses csrfmiddlewaretoken in forms, csrf_token template tag</div>
+      </div>
+      <div class="fw-row">
+        <div class="fw-cell fw-name">Laravel</div>
+        <div class="fw-cell">VerifyCsrfToken middleware — enabled by default for web routes</div>
+        <div class="fw-cell">Blade @csrf directive inserts token in forms automatically</div>
+      </div>
+      <div class="fw-row">
+        <div class="fw-cell fw-name">Spring Boot</div>
+        <div class="fw-cell">Spring Security CsrfFilter — enabled by default for stateful apps</div>
+        <div class="fw-cell">Disable only for stateless REST APIs using JWT</div>
+      </div>
+      <div class="fw-row">
+        <div class="fw-cell fw-name">Rails</div>
+        <div class="fw-cell">protect_from_forgery — enabled by default in ApplicationController</div>
+        <div class="fw-cell">Uses authenticity_token, form_authenticity_token helper</div>
+      </div>
+    </div>
 
-<section>
-<h2>Why Web Security Tools Matter</h2>
-<p>
-Modern web applications are constantly exposed to threats. These tools help identify vulnerabilities,
-validate configurations, and ensure your application follows best practices for security and performance.
-</p>
-</section>
+<div class="code-block"><span class="cm"># ─── OWASP ZAP — CSRF scan in CI/CD (GitHub Actions) ───</span>
+
+
+<span class="ck">name:</span> Security Scan
+<span class="ck">jobs:</span>
+<span class="ck">zap-scan:</span>
+<span class="ck">steps:</span>
+- <span class="ck">name:</span> ZAP CSRF Scan
+<span class="ck">uses:</span> zaproxy/action-full-scan@v0.10.0
+<span class="ck">with:</span>
+<span class="ck">target:</span> <span class="cs">‘https://your-staging-app.com’</span>
+<span class="ck">rules_file_name:</span> <span class="cs">’.zap/rules.tsv’</span>
+
+<span class="cm"># ─── SEMGREP — catch missing CSRF middleware in code review ───</span>
+<span class="cm"># Add to .github/workflows/semgrep.yml</span>
+<span class="ck">uses:</span> returntocorp/semgrep-action@v1
+<span class="ck">with:</span>
+<span class="ck">config:</span> <span class="cg">p/owasp-top-ten</span>  <span class="cm"># includes CSRF rules</span>
+
+<span class="cm"># ─── NUCLEI — fast CSRF template scan ───</span>
+<span class="ck">nuclei</span> -t csrf/ -u https://your-app.com -o csrf-results.txt</div>
+
+  </section>
+
+  <!-- GUIDE -->
+
+  <section class="content-section">
+    <div class="sec-head">
+      <span class="sec-label">CSRF guide for DevOps teams</span>
+      <span class="sec-rule"></span>
+    </div>
+    <div class="dense-block">
+      <p><strong>What is CSRF and why do DevOps teams care?</strong><br>
+      CSRF (Cross-Site Request Forgery) tricks a logged-in user's browser into making unauthorized requests to your application. An attacker's malicious page sends a form POST to your API — the browser automatically includes the user's session cookie, so the server processes it as legitimate. DevOps teams need to ensure CSRF protection is present in every deployment — framework middleware is often accidentally disabled, excluded from API routes, or misconfigured when migrating between frameworks.</p>
+      <p><strong>SameSite cookies — the modern CSRF defense</strong><br>
+      Modern browsers support the <code>SameSite</code> cookie attribute which prevents cookies from being sent on cross-site requests. <code>SameSite=Strict</code> — cookie never sent on cross-site requests (safest, but breaks OAuth flows). <code>SameSite=Lax</code> (browser default since 2020) — sent on top-level navigation GET requests, blocked on cross-site POST. <code>SameSite=None; Secure</code> — required for cross-site requests (e.g., third-party APIs, embeds). Set SameSite in your session cookie configuration — for most apps, <code>Lax</code> provides CSRF protection without breaking OAuth.</p>
+      <p><strong>REST APIs and CSRF — when you can skip CSRF tokens</strong><br>
+      Stateless REST APIs using JWT Bearer tokens in Authorization headers are <strong>not vulnerable to CSRF</strong> — browsers don't automatically send custom headers on cross-site requests. Skip CSRF middleware for: APIs authenticated with <code>Authorization: Bearer TOKEN</code>, APIs authenticated with API keys in headers. Keep CSRF protection for: APIs that accept session cookies for authentication, any endpoint that performs state changes and is accessed from a browser session.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+
+  <section class="content-section">
+    <div class="sec-head">
+      <span class="sec-label">FAQ — CSRF tools for DevOps</span>
+      <span class="sec-rule"></span>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">What are the best CSRF tools for DevOps teams?<span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-a"><strong>Scanning tools:</strong> OWASP ZAP (free, active CSRF scanning, CI/CD integration), Burp Suite Pro (CSRF PoC generator), Nuclei (fast, template-based, great for CI). <strong>Framework middleware:</strong> @fastify/csrf-protection (Node.js), Django CsrfViewMiddleware (built-in), Laravel VerifyCsrfToken (built-in), Spring Security CsrfFilter (built-in). <strong>Code review:</strong> Semgrep with OWASP Top 10 ruleset catches missing CSRF middleware at PR time. <strong>This tool:</strong> quick HTML/header paste-and-check for immediate feedback.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How do I add CSRF protection to a CI/CD pipeline?<span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-a">(1) Add <strong>OWASP ZAP</strong> as a GitHub Actions step: use <code>zaproxy/action-full-scan</code> against your staging environment. (2) Add <strong>Semgrep</strong> with <code>p/owasp-top-ten</code> rules to scan PRs for missing CSRF middleware. (3) Add <strong>Nuclei</strong> with CSRF templates as a post-deployment check. (4) In integration tests: assert that form responses include a CSRF token field, that cookies have <code>SameSite</code> set, and that your security headers include <code>X-Frame-Options</code> to prevent clickjacking.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Does SameSite=Lax replace CSRF tokens?<span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-a">Partially. <code>SameSite=Lax</code> prevents CSRF attacks in modern browsers for POST/PUT/DELETE requests — the cookie is not sent on cross-site non-navigational requests. However: (1) Not all browsers have universal SameSite support (older mobile browsers). (2) SameSite=Lax allows cross-site GET requests with navigation (clicking a link) — don't perform state changes on GET. (3) For maximum security, use both SameSite cookies AND CSRF tokens — defense in depth. The OWASP recommendation is to use SameSite=Lax as a secondary defense and maintain CSRF tokens as the primary defense.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Do REST APIs need CSRF protection?<span class="faq-arrow">&#9660;</span></button>
+        <div class="faq-a">Depends on authentication method. <strong>JWT Bearer tokens (Authorization header):</strong> No CSRF needed — browsers can't send custom headers cross-site without a preflight. <strong>API keys in headers:</strong> No CSRF needed — same reason. <strong>Session cookies:</strong> Yes — CSRF protection required, because browsers send cookies automatically on any cross-site request. Disable CSRF middleware only for routes that use non-cookie authentication. A common mistake: disabling CSRF globally for an "API" that is actually accessed from a browser with session cookies.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="sec-head">
+      <span class="sec-label">Security tools</span>
+      <span class="sec-rule"></span>
+    </div>
+    <div class="subtools-grid">
+      <a href="security-tools-v2/csrf/" class="stl"><p class="stl-eye">csrf //</p><span class="stl-name">CSRF Protection Checker</span></a>
+      <a href="security-tools-v2/cors/" class="stl"><p class="stl-eye">cors //</p><span class="stl-name">CORS Analyzer</span></a>
+      <a href="security-tools-v2/headers/" class="stl"><p class="stl-eye">headers //</p><span class="stl-name">Security Headers Analyzer</span></a>
+      <a href="security-tools-v2/ddos/" class="stl"><p class="stl-eye">ddos //</p><span class="stl-name">DDoS Mitigation Tool</span></a>
+      <a href="security-tools-v2/ssl/" class="stl"><p class="stl-eye">ssl //</p><span class="stl-name">SSL Configuration Analyzer</span></a>
+      <a href="security-tools-v2/rate/" class="stl"><p class="stl-eye">rate //</p><span class="stl-name">Rate Limiting Tester</span></a>
+    </div>
+  </section>
+
+  <div class="tag-cloud">
+    <span class="tag">csrf tools for devops teams</span>
+    <span class="tag">csrf protection checker</span>
+    <span class="tag">csrf tool</span>
+    <span class="tag">csrf ci cd pipeline</span>
+    <span class="tag">owasp zap csrf</span>
+    <span class="tag">csrf token validator</span>
+    <span class="tag">samesite cookie csrf</span>
+    <span class="tag">csrf express django laravel</span>
+    <span class="tag">csrf devops security</span>
+    <span class="tag">csrf testing tool</span>
+  </div>
 
 </div>
 
 <footer>
-<p>© 2026 Security Tools v2 – Protect applications, enforce security, prevent attacks</p>
+  <div class="footer-inner">
+    <p>csrf-tools-devops &middot; security checker &middot; ci/cd &middot; github pages</p>
+    <p>owasp &middot; samesite cookies &middot; csrf tokens &middot; devops</p>
+  </div>
 </footer>
+
+<script>
+var currentMode = 'html';
+
+function setMode(mode, btn) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  var hint = document.getElementById('paneHint');
+  if (mode === 'html') {
+    hint.textContent = '// Paste HTML page source or form code';
+    document.getElementById('csrfInput').placeholder = 'Paste HTML here (form, page source, etc.)...';
+  } else {
+    hint.textContent = '// Paste HTTP response headers (one per line)';
+    document.getElementById('csrfInput').placeholder = 'Paste HTTP response headers here...\nSet-Cookie: session=abc; HttpOnly; Secure\nContent-Security-Policy: ...\nX-Frame-Options: DENY';
+  }
+}
+
+var HTML_RULES = [
+  {
+    level: 'critical',
+    title: 'Form POST without CSRF token',
+    check: function(src) {
+      var parser = new DOMParser();
+      var doc = parser.parseFromString(src, 'text/html');
+      var forms = doc.querySelectorAll('form');
+      var vulnerable = [];
+      forms.forEach(function(form) {
+        var method = (form.getAttribute('method') || 'get').toLowerCase();
+        if (method !== 'post' && method !== 'put' && method !== 'delete' && method !== 'patch') return;
+        var hasToken = form.querySelector(
+          'input[name="csrf_token"], input[name="_token"], input[name="csrfmiddlewaretoken"], input[name="_csrf"], input[name="authenticity_token"], input[type="hidden"][name*="csrf"], input[type="hidden"][name*="token"]'
+        );
+        if (!hasToken) vulnerable.push(form.getAttribute('action') || 'unknown action');
+      });
+      if (vulnerable.length > 0) {
+        return vulnerable.length + ' POST form(s) found without CSRF token: ' + vulnerable.slice(0, 3).join(', ') + '. Add a hidden CSRF token field to each state-changing form.';
+      }
+      return null;
+    }
+  },
+  {
+    level: 'warning',
+    title: 'Missing X-Frame-Options (clickjacking risk)',
+    check: function(src) {
+      if (!/<meta[^>]+http-equiv[^>]+X-Frame-Options/i.test(src) && !/<meta[^>]*content-security-policy/i.test(src)) {
+        return 'No X-Frame-Options or CSP frame-ancestors found in HTML meta tags. Without it, your page can be embedded in an iframe for clickjacking attacks that bypass CSRF protection.';
+      }
+      return null;
+    }
+  },
+  {
+    level: 'info',
+    title: 'CSRF token fields detected',
+    check: function(src) {
+      var matches = src.match(/name=["'](?:csrf_token|_token|csrfmiddlewaretoken|_csrf|authenticity_token)['"]/gi);
+      if (matches && matches.length > 0) {
+        return matches.length + ' CSRF token field(s) found. Verify server validates these on state-changing requests.';
+      }
+      return null;
+    }
+  },
+  {
+    level: 'info',
+    title: 'JavaScript CSRF header pattern detected',
+    check: function(src) {
+      if (/X-CSRF-Token|X-Requested-With|x-csrf|csrfToken/i.test(src)) {
+        return 'CSRF-related JavaScript patterns detected. Ensure your AJAX calls include the CSRF token in request headers (X-CSRF-Token) and the server validates it.';
+      }
+      return null;
+    }
+  }
+];
+
+var HEADER_RULES = [
+  {
+    level: 'critical',
+    title: 'Session cookie missing SameSite attribute',
+    check: function(src) {
+      var lines = src.split('\n');
+      var cookieLines = lines.filter(function(l) { return /set-cookie/i.test(l); });
+      var missing = cookieLines.filter(function(l) { return !/samesite/i.test(l) && /(session|sess|sid|auth|token|PHPSESSID|JSESSIONID)/i.test(l); });
+      if (missing.length > 0) {
+        return missing.length + ' session cookie(s) missing SameSite attribute. Add SameSite=Lax (or Strict) to prevent CSRF via cross-site requests.';
+      }
+      return null;
+    }
+  },
+  {
+    level: 'critical',
+    title: 'Session cookie missing HttpOnly flag',
+    check: function(src) {
+      var lines = src.split('\n');
+      var cookieLines = lines.filter(function(l) { return /set-cookie/i.test(l); });
+      var missing = cookieLines.filter(function(l) { return !/(httponly|HttpOnly)/i.test(l) && /(session|sess|sid|auth|PHPSESSID|JSESSIONID)/i.test(l); });
+      if (missing.length > 0) {
+        return missing.length + ' session cookie(s) missing HttpOnly flag. Without HttpOnly, XSS can steal the session cookie and bypass CSRF protection.';
+      }
+      return null;
+    }
+  },
+  {
+    level: 'warning',
+    title: 'Missing X-Frame-Options header',
+    check: function(src) {
+      if (!/x-frame-options/i.test(src)) {
+        return 'X-Frame-Options header not found. Set to DENY or SAMEORIGIN to prevent clickjacking, which can be combined with CSRF attacks.';
+      }
+      return null;
+    }
+  },
+  {
+    level: 'warning',
+    title: 'Missing Content-Security-Policy header',
+    check: function(src) {
+      if (!/content-security-policy/i.test(src)) {
+        return 'Content-Security-Policy header not found. A CSP with frame-ancestors directive provides modern protection against clickjacking (replacing X-Frame-Options).';
+      }
+      return null;
+    }
+  },
+  {
+    level: 'info',
+    title: 'SameSite cookie configuration',
+    check: function(src) {
+      if (/samesite=strict/i.test(src)) return 'SameSite=Strict detected. Strictest CSRF protection — cookie not sent on any cross-site request. May break OAuth flows.';
+      if (/samesite=lax/i.test(src)) return 'SameSite=Lax detected. Good CSRF protection — cookie blocked on cross-site POST/PUT/DELETE. Browser default since 2020.';
+      if (/samesite=none/i.test(src)) return 'SameSite=None detected. Cookie sent cross-site (required for third-party contexts). Must be combined with Secure attribute. Does NOT prevent CSRF.';
+      return null;
+    }
+  },
+  {
+    level: 'info',
+    title: 'CSRF token in response headers',
+    check: function(src) {
+      if (/x-csrf-token|csrf-token/i.test(src)) {
+        return 'CSRF token header detected. Verify the client reads this and includes it in subsequent state-changing requests as X-CSRF-Token.';
+      }
+      return null;
+    }
+  }
+];
+
+function el(tag, cls, text) {
+  var e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+function makeFinding(level, title, body) {
+  var lm = { critical: 'f-critical', warning: 'f-warning', info: 'f-info', pass: 'f-pass' };
+  var bm = { critical: 'fb-critical', warning: 'fb-warning', info: 'fb-info', pass: 'fb-pass' };
+  var ll = { critical: 'CRITICAL', warning: 'WARNING', info: 'INFO', pass: 'PASS' };
+  var card = el('div', 'finding ' + (lm[level] || 'f-info'));
+  var head = el('div', 'f-head');
+  head.appendChild(el('span', 'f-badge ' + (bm[level] || 'fb-info'), ll[level] || 'INFO'));
+  head.appendChild(el('span', 'f-title', title));
+  card.appendChild(head);
+  if (body) card.appendChild(el('div', 'f-body', body));
+  return card;
+}
+
+function gradeFromFindings(criticals, warnings) {
+  var score = 100 - criticals * 30 - warnings * 12;
+  score = Math.max(5, Math.min(100, score));
+  if (score >= 90) return { grade: 'A', label: 'Strong CSRF protection', color: 'var(--green)' };
+  if (score >= 70) return { grade: 'B', label: 'Minor gaps found',        color: 'var(--csrf)' };
+  if (score >= 50) return { grade: 'C', label: 'Medium risk',             color: 'var(--yellow)' };
+  if (score >= 30) return { grade: 'D', label: 'Significant issues',      color: 'var(--orange)' };
+  return { grade: 'F', label: 'Critical CSRF vulnerabilities', color: 'var(--red)' };
+}
+
+function runCheck() {
+  var src    = document.getElementById('csrfInput').value.trim();
+  var status = document.getElementById('statusMsg');
+  var rules  = currentMode === 'html' ? HTML_RULES : HEADER_RULES;
+
+  if (!src) {
+    status.textContent = 'Paste content first.';
+    status.style.color = 'var(--yellow)';
+    return;
+  }
+
+  var findings = [];
+  rules.forEach(function(rule) {
+    var result = rule.check(src);
+    if (result) findings.push({ level: rule.level, title: rule.title, body: result });
+  });
+
+  var criticals = findings.filter(function(f) { return f.level === 'critical'; }).length;
+  var warnings  = findings.filter(function(f) { return f.level === 'warning'; }).length;
+  var infos     = findings.filter(function(f) { return f.level === 'info'; }).length;
+  var grade     = gradeFromFindings(criticals, warnings);
+
+  if (findings.length === 0) {
+    findings.push({ level: 'pass', title: 'No common CSRF issues detected', body: 'Input passes pattern-based CSRF checks. For comprehensive testing, run OWASP ZAP active scan against your deployed application.' });
+  }
+
+  var pane = document.getElementById('resultsPane');
+  pane.innerHTML = '';
+
+  var banner = el('div', 'score-banner');
+  banner.style.borderColor = grade.color;
+  var gradeEl = el('div', 'score-grade', grade.grade);
+  gradeEl.style.color = grade.color;
+  var meta = el('div', 'score-meta');
+  var ms = el('strong', null, 'Grade ' + grade.grade + ': ' + grade.label);
+  ms.style.color = grade.color;
+  meta.appendChild(ms);
+  meta.appendChild(el('span', null, criticals + ' critical · ' + warnings + ' warning · ' + infos + ' info'));
+  banner.appendChild(gradeEl);
+  banner.appendChild(meta);
+  pane.appendChild(banner);
+
+  var chips = el('div', 'stat-chips');
+  function makeChip(val, lbl, color) {
+    var c = el('div', 'sch');
+    var n = el('span', 'sch-num', String(val));
+    n.style.color = color;
+    c.appendChild(n);
+    c.appendChild(el('span', 'sch-lbl', lbl));
+    return c;
+  }
+  chips.appendChild(makeChip(criticals, 'Critical', 'var(--red)'));
+  chips.appendChild(makeChip(warnings,  'Warnings', 'var(--yellow)'));
+  chips.appendChild(makeChip(infos,     'Info',     'var(--csrf)'));
+  pane.appendChild(chips);
+
+  findings.forEach(function(f) { pane.appendChild(makeFinding(f.level, f.title, f.body)); });
+
+  status.textContent = criticals + ' critical, ' + warnings + ' warning(s).';
+  status.style.color = criticals > 0 ? 'var(--red)' : warnings > 0 ? 'var(--yellow)' : 'var(--green)';
+}
+
+function loadSample() {
+  if (currentMode === 'html') {
+    document.getElementById('csrfInput').value = [
+      '<!DOCTYPE html>',
+      '<html>',
+      '<head><title>App</title></head>',
+      '<body>',
+      '  <form method="POST" action="/transfer">',
+      '    <input type="text" name="amount">',
+      '    <input type="text" name="to_account">',
+      '    <button type="submit">Transfer</button>',
+      '  </form>',
+      '  <form method="POST" action="/change-email">',
+      '    <input name="email">',
+      '    <button>Save</button>',
+      '  </form>',
+      '</body>',
+      '</html>'
+    ].join('\n');
+  } else {
+    document.getElementById('csrfInput').value = [
+      'HTTP/1.1 200 OK',
+      'Content-Type: text/html',
+      'Set-Cookie: session=abc123; Path=/',
+      'Set-Cookie: pref=dark; Path=/',
+      'Server: nginx/1.24'
+    ].join('\n');
+  }
+  runCheck();
+}
+
+function clearAll() {
+  document.getElementById('csrfInput').value = '';
+  document.getElementById('statusMsg').textContent = '';
+  var pane = document.getElementById('resultsPane');
+  pane.innerHTML = '';
+  var idle = el('div', 'idle-msg');
+  var icon = el('span', null, '\u25a0');
+  icon.style.fontSize = '28px';
+  icon.style.opacity = '0.1';
+  idle.appendChild(icon);
+  idle.appendChild(el('span', null, 'Paste HTML or headers and click\nCheck CSRF Security'));
+  pane.appendChild(idle);
+}
+
+function toggleFaq(btn) {
+  btn.parentElement.classList.toggle('open');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('checkBtn').addEventListener('click', runCheck);
+  document.getElementById('sampleBtn').addEventListener('click', loadSample);
+  document.getElementById('clearBtn').addEventListener('click', clearAll);
+  document.getElementById('clearBtn2').addEventListener('click', clearAll);
+  document.getElementById('csrfInput').placeholder = 'Paste HTML here (form, page source, etc.)...';
+});
+</script>
 
 </body>
 </html>
